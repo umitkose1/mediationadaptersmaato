@@ -3,14 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'com.huawei.agconnect'
 }
-if (!System.getenv()["CI"]) {
-    ext {
-        PUBLISH_GROUP_ID = 'com.hmscl.huawei.ads'
-        PUBLISH_ARTIFACT_ID = 'mediation_adapter_admob'
-        PUBLISH_VERSION = '1.5'
-    }
-}
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -31,13 +23,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-/*    compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }*/
+    }
 }
 
 dependencies {

@@ -1,21 +1,26 @@
-package com.hmscl.huawei.ads;
+package com.hmsmd.huawei.ads;
 
 import android.content.Context;
 
-
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.InterstitialAd;
+import com.huawei.hms.ads.BannerAdSize;
+import com.huawei.hms.ads.banner.BannerView;
 import com.smaato.soma.ErrorCode;
 import com.smaato.soma.bannerutilities.constant.Values;
 import com.smaato.soma.debug.DebugCategory;
 import com.smaato.soma.debug.Debugger;
 import com.smaato.soma.debug.LogMessage;
-import com.smaato.soma.mediation.MediationEventInterstitial;
+import com.smaato.soma.mediation.MediationEventBanner;
+import com.smaato.soma.mediation.Views;
 
 import java.util.Map;
 
-public class CustomMediationIntersitial extends MediationEventInterstitial {
+
+/*
+ *  Sample Custom Adapter implementation using Google's AdMob
+ */
+public class CustomMediationBanner extends MediationEventBanner {
 
 
     /**
@@ -30,33 +35,53 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
     private static final String TAG = "CustomMediationBannerAdapterSample";
 
 
-    private MediationEventInterstitialListener mIntersitialListener;
+    private MediationEventBannerListener mBannerListener;
 
     // consider to have static and single instance based on the Adapter requirement
-    private InterstitialAd mGoogleAdView;
+    private BannerView mGoogleAdView;
     int width = 0;
     int height = 0;
 
     /*
      * The Method name could be changed as per the name given in the Smaato SPX portal, but the params should be fixed.
      */
-    public void loadCustomIntersitial(Context context, MediationEventInterstitialListener mediationEventBannerListener, Map<String, String> serverBundle) {
+    public void loadCustomBanner(Context context, MediationEventBannerListener mediationEventBannerListener, Map<String, String> serverBundle) {
 
-        mIntersitialListener = mediationEventBannerListener;
+        mBannerListener = mediationEventBannerListener;
 
         if (!mediationInputsAreValid(serverBundle)) {
-            mIntersitialListener.onInterstitialFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR);
+            mBannerListener.onBannerFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR);
             return;
         }
 
         try {
 
-            mGoogleAdView = new InterstitialAd(context);
-            mGoogleAdView.setAdId(serverBundle.get(ID_KEY));
+            mGoogleAdView = new BannerView(context);
             mGoogleAdView.setAdListener(new AdViewListener());
-            //  mGoogleAdView.setAdUnitId(serverBundle.get(ID_KEY));
+            mGoogleAdView.setAdId(serverBundle.get(ID_KEY));
+          //  mGoogleAdView.setAdUnitId(serverBundle.get(ID_KEY));
+
+            // default is Banner
+          //  AdSize adSize = AdSize.BANNER;
+            BannerAdSize adSize = BannerAdSize.BANNER_SIZE_320_50;
+
+         //   adSize =   calculateAdSize(width, height);
+
+            if (adSize == null) {
+                // Wrong dimension will get defaulted to BANNER
+                adSize = BannerAdSize.BANNER_SIZE_320_50;
+            }
+
+            mGoogleAdView.setBannerAdSize(adSize);
 
 
+            /*final AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent(Values.MEDIATION_AGENT)
+                    .addTestDevice("9CD6511F651989A0A3ED8B1928D84152")
+                    .build();
+*/
+
+         //   mGoogleAdView.loadAd(adRequest);
 
             AdParam adParam = new AdParam.Builder().build();
             mGoogleAdView.loadAd(adParam);
@@ -75,20 +100,9 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
 
 
     @Override
-    public void showInterstitial() {
-        if(mGoogleAdView.isLoaded()){
-            mGoogleAdView.show();
-        }
-    }
-
-    @Override
     public void onInvalidate() {
         try {
-          //  Views.removeFromParent(mGoogleAdView.getAdMetadata());
-            Debugger.showLog(new LogMessage(TAG,
-                    "hata invalidate",
-                    Debugger.Level_1,
-                    DebugCategory.DEBUG));
+            Views.removeFromParent(mGoogleAdView);
             destroy();
 
 
@@ -107,11 +121,7 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
         try {
 
             if (mGoogleAdView != null) {
-                //mGoogleAdView.;
-                Debugger.showLog(new LogMessage(TAG,
-                        "hata destroy",
-                        Debugger.Level_1,
-                        DebugCategory.DEBUG));
+                mGoogleAdView.destroy();
             }
 
         } catch (NoClassDefFoundError e) {
@@ -148,10 +158,25 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
         return false;
     }
 
-
-
+/*    public AdSize calculateAdSize(int width, int height) {
+        // Use the smallest AdSize that will properly contain the adView
+        if (width <= BANNER.getWidth() && height <= BANNER.getHeight()) {
+            return BANNER;
+        } else if (width <= MEDIUM_RECTANGLE.getWidth() && height <= MEDIUM_RECTANGLE.getHeight()) {
+            return MEDIUM_RECTANGLE;
+        } else if (width <= FULL_BANNER.getWidth() && height <= FULL_BANNER.getHeight()) {
+            return FULL_BANNER;
+        } else if (width <= LEADERBOARD.getWidth() && height <= LEADERBOARD.getHeight()) {
+            return LEADERBOARD;
+        } else {
+            return null;
+        }
+    }*/
 
     public class AdViewListener extends AdListener {
+        /*
+         * Google Play Services AdListener implementation
+         */
         @Override
         public void onAdClosed() {
 
@@ -166,12 +191,12 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
                         Debugger.Level_1,
                         DebugCategory.DEBUG));
 
-                if (mIntersitialListener != null) {
-                    mIntersitialListener.onInterstitialFailed(ErrorCode.NETWORK_NO_FILL);
+                if (mBannerListener != null) {
+                    mBannerListener.onBannerFailed(ErrorCode.NETWORK_NO_FILL);
                 }
 
                 if (mGoogleAdView != null) {
-                 //   mGoogleAdView.();
+                    mGoogleAdView.pause();
                 }
 
                 onInvalidate();
@@ -202,9 +227,8 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
                         Debugger.Level_1,
                         DebugCategory.DEBUG));
 
-                if (mIntersitialListener != null) {
-               //     mIntersitialListener.onWillShow();
-                    mIntersitialListener.onInterstitialLoaded();
+                if (mBannerListener != null) {
+                    mBannerListener.onReceiveAd(mGoogleAdView);
                 }
 
             } catch (NoClassDefFoundError e) {
@@ -225,8 +249,8 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
                     Debugger.Level_1,
                     DebugCategory.DEBUG));
 
-            if (mIntersitialListener != null ) {
-                mIntersitialListener.onInterstitialClicked();
+            if (mBannerListener != null ) {
+                mBannerListener.onBannerClicked();
             }
         }
     }
@@ -239,7 +263,7 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
                 Debugger.Level_1,
                 DebugCategory.ERROR));
 
-        mIntersitialListener.onInterstitialFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR);
+        mBannerListener.onBannerFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR);
         onInvalidate();
     }
 
@@ -250,7 +274,7 @@ public class CustomMediationIntersitial extends MediationEventInterstitial {
                 Debugger.Level_1,
                 DebugCategory.ERROR));
 
-        mIntersitialListener.onInterstitialFailed(ErrorCode.GENERAL_ERROR);
+        mBannerListener.onBannerFailed(ErrorCode.GENERAL_ERROR);
 
         onInvalidate();
     }

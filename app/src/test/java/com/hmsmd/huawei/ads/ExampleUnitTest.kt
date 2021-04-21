@@ -1,4 +1,4 @@
-package com.hmscl.huawei.ads
+package com.hmsmd.huawei.ads
 
 import org.junit.Test
 

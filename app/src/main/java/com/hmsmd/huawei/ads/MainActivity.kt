@@ -1,4 +1,4 @@
-package com.hmscl.huawei.ads
+package com.hmsmd.huawei.ads
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
