@@ -135,12 +135,6 @@ interstitial.getAdSettings().setAdspaceId(your_adspace_d);
 Banner Ad
 </td>
 
-<td>
-<img src="https://user-images.githubusercontent.com/41696219/109941887-aa828400-7ce4-11eb-9409-d93adf506724.JPG" width="200">
-
-Interstitial Ad
-</td>
-
 </table>
 
 ## Huawei
