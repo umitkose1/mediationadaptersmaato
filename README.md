@@ -130,7 +130,7 @@ interstitial.getAdSettings().setAdspaceId(your_adspace_d);
 <table>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/41696219/109941743-8626a780-7ce4-11eb-8aa8-4da1e3f1092f.png" width="200">
+<img src="https://github.com/umitkose1/mediationadaptersmaato/blob/master/Screenshot_20210504_083309_com.example.huaweitestapplica.jpg" width="200">
 
 Banner Ad
 </td>
