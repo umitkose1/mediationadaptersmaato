@@ -126,7 +126,7 @@ interstitial.getAdSettings().setAdspaceId(your_adspace_d);
 
 # Screenshots
 
-## AdMob
+## Smaato
 <table>
 <tr>
 <td>
@@ -141,18 +141,6 @@ Banner Ad
 Interstitial Ad
 </td>
 
-<td>
-<img src="https://user-images.githubusercontent.com/41696219/109941974-c4bc6200-7ce4-11eb-81b8-e35a2589d528.JPG" width="200">
-
-Rewarded Ad
-</td>
-<td>
-<img src="https://user-images.githubusercontent.com/41696219/109942031-d43bab00-7ce4-11eb-815f-403918a6b7f4.png" width="200">
-
-Native Ad
-</td>
-</tr>
-</tr>
 </table>
 
 ## Huawei
@@ -171,19 +159,6 @@ Banner Ad
 Interstitial Ad
 </td>
 
-<td>
-<img src="https://user-images.githubusercontent.com/41696219/109942227-0baa5780-7ce5-11eb-8b69-086924473db0.png" width="200">
-
-Rewarded Ad
-</td>
-<td>
-<img src="https://user-images.githubusercontent.com/41696219/109942307-211f8180-7ce5-11eb-8c3e-7d21903bf6d1.png" width="200">
-
-Native Ad
-</td>
-
-</tr>
-</tr>
 </table>
 
 
