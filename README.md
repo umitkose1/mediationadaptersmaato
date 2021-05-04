@@ -4,6 +4,10 @@
 
 In this documentation we explained how to use Huawei-Mopub mediation with in the different platforms.
 
+# Compatibility
+
+|   | Banner Ad | Interstitial Ad |
+
 # How to start?
   
 ## Create an ad unit on Huawei Publisher Service
