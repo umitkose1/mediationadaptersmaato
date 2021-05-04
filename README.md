@@ -68,7 +68,7 @@ In the app-level build.gradle, include Huawei Ads dependency (required by the ad
 ```groovy
 dependencies {
     implementation 'com.huawei.hms:ads-lite:13.4.37.300'
-    implementation 'com.hmscl.huawei.ads:mediation_adapter_admob:1.4'
+    implementation 'com.hmsmd.huawei.ads:androidlibrary:1.0.4'
 }
 ```
 
@@ -86,197 +86,43 @@ dependencies {
 
 ## Native
 
-This section demonstrates how to use AdMob mediation feature with Huawei Ads Kit on Native android app.
+This section demonstrates how to use Smaato mediation feature with Huawei Ads Kit on Native android app.
 
-Firstly, integrate the Admob SDK for Android
+Firstly, integrate the Smaato SDK for Android
 
-[Admob Android SDK](https://developers.google.com/admob/android/quick-start) can be used for all ad types.
+[Smaato Android SDK](https://developers.smaato.com/publishers-legacy/android-sdk-getting-started) can be used for all ad types.
 
 **Note** : Developers can find app level build.gradle in their project from __**"app-folder/app/build.gradle"**__
 
 ### **Banner Ad**
 
-To use _Banner_ ads in Native android apps, please check the Admob SDK. Click [here](https://developers.google.com/admob/android/banner) to get more information about Admob SDKs _Banner_ Ad development.
+To use _Banner_ ads in Native android apps, please check the Smaato SDK. Click [here](https://developers.smaato.com/publishers-legacy/android-sdk-adformat-banners) to get more information about Smaato SDKs _Banner_ Ad development.
 
 ### **Interstitial Ad**
 
-To use Interstitial ads in Native android apps, please check the Admob SDK. Click [here](https://developers.google.com/admob/android/interstitial-fullscreen) to get more information about Admob SDKs Interstitial Ad development.
-
-### **Rewarded Ad**
-
-To use _Rewarded_ ads in Native android _Rewarded_, please check the Admob SDK. Click [here](https://developers.google.com/admob/android/rewarded-fullscreen) to get more information about Admob SDKs _Banner_ Ad development.
-
-### **Native Ads**
-
-To use _Native_ ads in Native android apps, please check the Admob SDK. Click [here](https://developers.google.com/admob/android/native/start) to get more information about Admob SDKs _Native_ Ad development.
-
-## React Native
-
-
-This section demonstrates how to use AdMob mediation feature with Huawei Ads Kit on React-Native.
-
-**Important:** _There is no official React Native SDK for Admob therefore third party SDKs has been used in the demonstration._
-
-Firstly, integrate the React Native Admob SDKs as below depending on type of ad
-
-**Note**: Developers can find app level build.gradle in their project from __**"app-folder/app/build.gradle"**__
-
-For **Banner** , **Interstitial** and **Rewarded** Ad type's [react-native-admob](https://github.com/sbugert/react-native-admob) SDK can be used.
-
-For **Native** ad type [react-native-admob-native-ads](https://github.com/ammarahm-ed/react-native-admob-native-ads) SDK can be used.
-
-Then use the following sample codes based on specific ad types.
+To use Interstitial ads in Native android apps, please check the Smaato SDK. Click [here](https://developers.smaato.com/publishers-legacy/android-sdk-adformat-interstitial) to get more information about Smaato SDKs Interstitial Ad development.
 
 ## **Sample Codes Based on Ad Types**
 
 ### **Banner Ad**
 
 ```jsx
-<AdMobBanner
+<SmaatoBanner
 adSize="fullBanner"
-adUnitId={BannerAdId}
-testDevices={[AdMobBanner.simulatorId]}
-onAdFailedToLoad={error => console.error(error)} />
+BannerView mBanner = new BannerView (context);
+mBanner.getAdSettings().setPublisherId(publisherId);
+mBanner.getAdSettings().setAdspaceId(adspaceId);} />
 ```
 
 ### **Interstitial Ad**
 
 ```jsx
-AdMobInterstitial.setAdUnitID(InterstitialAdId);
-AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
-AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+interstitial = new Interstitial(this); //'this' is your Context
+interstitial.setInterstitialAdListener(interstitialAdListener);
+interstitial.getAdSettings().setPublisherId(your_publisher_id);
+interstitial.getAdSettings().setAdspaceId(your_adspace_d);
 ```
 
-### **Rewarded Ad**
-
-```jsx
-AdMobRewarded.setAdUnitId(RewardedAdId);
-AdMobRewarded.requestAd().then(() => AdMobRewarded.showAd());
-```
-### **Native Ads**
-
-```jsx
-<NativeAdView
-adUnitID= {NativeAdId} 
-onAdFailedToLoad={error => console.error(error)} /> 
-```
-
-## Flutter
-
-This section demonstrates how to use AdMob mediation feature with Huawei Ads Kit on Flutter.
-
-**Important:** _There is no official Flutter SDK for_ AdMob _therefore third party SDKs has been used in the demonstration._
-
-Firstly, integrate the Flutter_ AdMob _SDKs as below depending on type of ad
-
-**Note**: Developers can find app level build.gradle in their project from  __**"app-folder/android/app/build.gradle"**__
-
-For **Banner** and **Interstitial** Ad types [admob\_flutter](https://github.com/kmcgill88/admob_flutter) SDK can be used.
-
-For **Banner** and **Rewarded** Ad types [googleads-mobile-flutter](https://github.com/googleads/googleads-mobile-flutter) SDK can be used.
-
-### **Native Ad**
-
-Native ads are not supported with this SDK. To use Native ads in Flutter app, please check the HMS Core Ads Kit Flutter SDK. Click [here](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides-V1/native-ads-0000001050198817-V1) to get more information about HMS Core Flutter SDKs Native Ad development.
-
-Then use the following sample codes based on specific ad types.
-
-
-## **Sample Codes Based on Ad Types**
-
-### **Banner Ad**
-
-```dart
-…
-Admob.initialize();
-…
-child: AdmobBanner(
-  adUnitId: "Your Banner Ad Unit ID",
-  adSize: AdMobBannerSize.[Selected_Banner_Size],
-  listener: (AdmobAdEvent event,
-      Map<String, dynamic> args) {
-    handleEvent(event, args, 'Banner');
-  },
-  onBannerCreated:
-      (AdmobBannerController controller) {
-  },
-),
-…
-```
-### **Interstitial Ad**
-
-```dart
-…
-Admob.initialize();
-…
-interstitialAd = AdmobInterstitial(
-  adUnitId: "Your Intersitatial Ad Unit ID",
-  listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-    if (event == AdmobAdEvent.closed) interstitialAd.load();
-    handleEvent(event, args, 'Interstitial');
-  },
-);
-```
-### **Rewarded Ad**
-
-```dart
-class RewardedAd extends AdWithoutView {
-  ...
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'Your Rewarded Ad Unit ID'
-      : 'Your Rewarded Ad Unit ID';
-
-  @override
-  Future<void> load() async {
-    await instanceManager.loadRewardedAd(this);
-  }
-}
-```
-
-## Cordova
-
-This section demonstrates how to use AdMob mediation feature with Huawei Ads Kit on Cordova.
-
-**Important:** _There is no official Cordova SDK for_ AdMob _therefore third party SDKs has been used in the demonstration._
-
-Firstly, integrate the Cordova_ AdMob _SDKs as below depending on type of ad
-
-**Note**: Developers can find app level build.gradle in their project from __**"app-folder/platforms/android/app/build.gradle"**__
-
-For **Banner** and **Interstitial** Ad types [admob-plus](https://github.com/admob-plus/admob-plus) SDK can be used.
-
-### **Rewarded Ad**
-
-Rewarded ads are not supported with this SDK. To use Rewarded ads in Cordova app, please check the HMS Core Ads Kit Cordova SDK. Click [here](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides-V1/rewarded-ads-0000001050195456-V1) to get more information about HMS Core Cordova SDKs Rewarded Ad development.
-
-### **Native Ad**
-
-Native ads are not supported in Cordova. To use Native Ads in Cordova App please check the HMS Core Ads Kit Cordova SDK. Click [here](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides-V1/native-ads-0000001050197495-V1) to get more information about HMS Core Cordova SDK Native Ad development.
-
-Then use the following sample codes based on specific ad types.
-
-## **Sample Codes Based on Ad Types**
-
-### **Banner Ads**
-```js
-showBannerAd() {
-  const banner = new admob.BannerAd({
-    adUnitId: '[Enter BannerAdID here]',
-  })
-  return banner.show({ position: 'bottom' })
-},
-```
-
-### **Interstitial Ads**
-
-```js
-showInterstitialAd() {
-  const interstitial = new admob.InterstitialAd({
-          adUnitId: '[Enter InterstitialAdID here]',
-  })
-  return interstitial.load().then(() => interstitial.show())
-},
-```
 
 # Screenshots
 
