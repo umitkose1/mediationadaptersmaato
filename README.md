@@ -1,8 +1,8 @@
- <h1 align="center">Huawei-Mopub Mediation Github Documentation</h3>
+ <h1 align="center">Huawei-Smaato Mediation Github Documentation</h3>
 
 # Introduction
 
-In this documentation we explained how to use Huawei-Mopub mediation with in the different platforms.
+In this documentation we explained how to use Huawei-Smaato mediation with in the different platforms.
 
 # Compatibility
 
