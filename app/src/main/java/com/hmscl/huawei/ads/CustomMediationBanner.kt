@@ -1,43 +1,51 @@
-package com.hmsmd.huawei.ads
+package com.hmscl.huawei.ads
 
 import android.content.Context
 import com.huawei.hms.ads.AdListener
 import com.huawei.hms.ads.AdParam
-import com.huawei.hms.ads.InterstitialAd
+import com.huawei.hms.ads.BannerAdSize
+import com.huawei.hms.ads.banner.BannerView
 import com.smaato.soma.ErrorCode
 import com.smaato.soma.bannerutilities.constant.Values
 import com.smaato.soma.debug.DebugCategory
 import com.smaato.soma.debug.Debugger
 import com.smaato.soma.debug.LogMessage
-import com.smaato.soma.mediation.MediationEventInterstitial
+import com.smaato.soma.mediation.MediationEventBanner
+import com.smaato.soma.mediation.Views
 
-class CustomMediationIntersitial : MediationEventInterstitial() {
-    private var mIntersitialListener: MediationEventInterstitialListener? = null
+class CustomMediationBanner : MediationEventBanner() {
+    private var mBannerListener: MediationEventBannerListener? = null
 
     // consider to have static and single instance based on the Adapter requirement
-    private var mGoogleAdView: InterstitialAd? = null
+    private var mHuaweiAdView: BannerView? = null
     var width = 0
     var height = 0
 
     /*
      * The Method name could be changed as per the name given in the Smaato SPX portal, but the params should be fixed.
      */
-    fun loadCustomIntersitial(
+    fun loadCustomBanner(
         context: Context?,
-        mediationEventBannerListener: MediationEventInterstitialListener?,
+        mediationEventBannerListener: MediationEventBannerListener?,
         serverBundle: Map<String, String?>
     ) {
-        mIntersitialListener = mediationEventBannerListener
+        mBannerListener = mediationEventBannerListener
         if (!mediationInputsAreValid(serverBundle)) {
-            mIntersitialListener!!.onInterstitialFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR)
+            mBannerListener!!.onBannerFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR)
             return
         }
         try {
-            mGoogleAdView = InterstitialAd(context)
-            mGoogleAdView!!.adId = serverBundle[ID_KEY]
-            mGoogleAdView!!.adListener = AdViewListener()
+            mHuaweiAdView = BannerView(context)
+            mHuaweiAdView!!.adListener = AdViewListener()
+            mHuaweiAdView!!.adId = serverBundle[ID_KEY]
+            var adSize = BannerAdSize.BANNER_SIZE_320_50
+            if (adSize == null) {
+                // Wrong dimension will get defaulted to BANNER
+                adSize = BannerAdSize.BANNER_SIZE_320_50
+            }
+            mHuaweiAdView!!.bannerAdSize = adSize
             val adParam = AdParam.Builder().build()
-            mGoogleAdView!!.loadAd(adParam)
+            mHuaweiAdView!!.loadAd(adParam)
         } catch (e: NoClassDefFoundError) {
             notifyMediationConfigIssues()
             return
@@ -47,22 +55,9 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
         }
     }
 
-    override fun showInterstitial() {
-        if (mGoogleAdView!!.isLoaded) {
-            mGoogleAdView!!.show()
-        }
-    }
-
     override fun onInvalidate() {
         try {
-            Debugger.showLog(
-                LogMessage(
-                    TAG,
-                    "hata invalidate",
-                    Debugger.Level_1,
-                    DebugCategory.DEBUG
-                )
-            )
+            Views.removeFromParent(mHuaweiAdView)
             destroy()
         } catch (e: NoClassDefFoundError) {
             notifyMediationConfigIssues()
@@ -75,15 +70,8 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
 
     fun destroy() {
         try {
-            if (mGoogleAdView != null) {
-                Debugger.showLog(
-                    LogMessage(
-                        TAG,
-                        "hata destroy",
-                        Debugger.Level_1,
-                        DebugCategory.DEBUG
-                    )
-                )
+            if (mHuaweiAdView != null) {
+                mHuaweiAdView!!.destroy()
             }
         } catch (e: NoClassDefFoundError) {
             return
@@ -105,9 +93,7 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
             }
 
             // ### Needs to be updated as per Custom Network Mandatory Fields
-            if (serverBundle != null && !serverBundle[ID_KEY]!!
-                    .isEmpty()
-            ) return true
+            if (serverBundle != null && !serverBundle[ID_KEY]!!.isEmpty()) return true
         } catch (e: Exception) {
             return false
         }
@@ -115,6 +101,9 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
     }
 
     inner class AdViewListener : AdListener() {
+        /*
+         * Google Play Services AdListener implementation
+         */
         override fun onAdClosed() {}
         override fun onAdFailed(errorCode: Int) {
             try {
@@ -126,10 +115,11 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
                         DebugCategory.DEBUG
                     )
                 )
-                if (mIntersitialListener != null) {
-                    mIntersitialListener!!.onInterstitialFailed(ErrorCode.NETWORK_NO_FILL)
+                if (mBannerListener != null) {
+                    mBannerListener!!.onBannerFailed(ErrorCode.NETWORK_NO_FILL)
                 }
-                if (mGoogleAdView != null) {
+                if (mHuaweiAdView != null) {
+                    mHuaweiAdView!!.pause()
                 }
                 onInvalidate()
             } catch (e: NoClassDefFoundError) {
@@ -152,13 +142,13 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
                 Debugger.showLog(
                     LogMessage(
                         TAG,
-                        " ad loaded successfully",
+                        "Google Play banner ad loaded successfully",
                         Debugger.Level_1,
                         DebugCategory.DEBUG
                     )
                 )
-                if (mIntersitialListener != null) {
-                    mIntersitialListener!!.onInterstitialLoaded()
+                if (mBannerListener != null) {
+                    mBannerListener!!.onReceiveAd(mHuaweiAdView)
                 }
             } catch (e: NoClassDefFoundError) {
                 notifyMediationConfigIssues()
@@ -173,13 +163,13 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
             Debugger.showLog(
                 LogMessage(
                     TAG,
-                    " banner ad clicked.",
+                    "Google Play Services banner ad clicked.",
                     Debugger.Level_1,
                     DebugCategory.DEBUG
                 )
             )
-            if (mIntersitialListener != null) {
-                mIntersitialListener!!.onInterstitialClicked()
+            if (mBannerListener != null) {
+                mBannerListener!!.onBannerClicked()
             }
         }
     }
@@ -193,7 +183,7 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
                 DebugCategory.ERROR
             )
         )
-        mIntersitialListener!!.onInterstitialFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR)
+        mBannerListener!!.onBannerFailed(ErrorCode.ADAPTER_CONFIGURATION_ERROR)
         onInvalidate()
     }
 
@@ -206,7 +196,7 @@ class CustomMediationIntersitial : MediationEventInterstitial() {
                 DebugCategory.ERROR
             )
         )
-        mIntersitialListener!!.onInterstitialFailed(ErrorCode.GENERAL_ERROR)
+        mBannerListener!!.onBannerFailed(ErrorCode.GENERAL_ERROR)
         onInvalidate()
     }
 
