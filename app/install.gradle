@@ -1,0 +1,40 @@
+/*
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.hmscl.huawei.ads'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId 'com.hmscl.huawei.ads'
+                artifactId 'smaatomediation'
+                name 'smaatomediation'
+                description 'Smaato Mediation'
+                url 'https://github.com/umitkose1/mediationadaptersmaato'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'umitkose1'
+                        name 'Umit Kose'
+                        email 'umit.kose@huawei.com'
+                    }
+                }
+
+                scm {
+                    connection 'https://github.com/umitkose1/mediationadaptersmaato.git'
+                    developerConnection 'https://github.com/umitkose1/mediationadaptersmaato.git'
+                    url 'https://github.com/umitkose1/mediationadaptersmaato'
+                }
+            }
+        }
+    }
+}*/
