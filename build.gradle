@@ -32,6 +32,9 @@ allprojects {
         maven {
             url  "https://hmsuk.bintray.com/maven"
         }
+        maven {
+            url  "https://jitpack.io"
+        }
     }
     tasks.withType(Javadoc).all {
         enabled = false
